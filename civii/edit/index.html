@@ -40,9 +40,11 @@
       <button type="button" class="ghost" id="lockBtn">Lock</button>
     </div>
 
-    <div id="entriesEditList"></div>
+    <div class="add-toggle-row">
+      <button type="button" class="primary" id="toggleAddBtn">+ Add a new word</button>
+    </div>
 
-    <div class="new-entry-card">
+    <div class="new-entry-card" id="newEntryCard" style="display:none;">
       <h2>Add a new word</h2>
       <div class="field">
         <label for="nTerm">Term</label>
@@ -57,9 +59,17 @@
         <textarea id="nExample" maxlength="300" placeholder="Used in a sentence…"></textarea>
       </div>
       <div class="gen-actions">
+        <button type="button" class="ghost" id="cancelAddBtn">Cancel</button>
         <button type="button" class="primary" id="addBtn">Add word</button>
       </div>
     </div>
+
+    <div class="edit-search-wrap">
+      <input type="text" id="editSearch" placeholder="Search entries to edit…" autocomplete="off">
+      <span class="edit-count" id="editCount"></span>
+    </div>
+
+    <div id="entriesEditList"></div>
   </div>
 </div>
 

@@ -8,8 +8,15 @@
   const editStatus = document.getElementById('editStatus');
   const entriesEditList = document.getElementById('entriesEditList');
   const addBtn = document.getElementById('addBtn');
+  const toggleAddBtn = document.getElementById('toggleAddBtn');
+  const cancelAddBtn = document.getElementById('cancelAddBtn');
+  const newEntryCard = document.getElementById('newEntryCard');
+  const editSearch = document.getElementById('editSearch');
+  const editCount = document.getElementById('editCount');
 
   let accessCode = '';
+  let allEntries = [];
+  let query = '';
 
   function escapeHtml(str) {
     const div = document.createElement('div');
@@ -45,21 +52,38 @@
     try {
       const res = await fetch('/api/terms', { cache: 'no-store' });
       const data = await res.json();
-      renderEntries(Array.isArray(data) ? data : []);
+      allEntries = Array.isArray(data) ? data : [];
+      renderEntries();
     } catch (err) {
       entriesEditList.innerHTML = '<div class="load-state error">Couldn\u2019t load entries.</div>';
       console.error(err);
     }
   }
 
-  function renderEntries(entries) {
-    if (entries.length === 0) {
+  function renderEntries() {
+    const filtered = allEntries.filter((e) => {
+      const q = query.toLowerCase();
+      return (
+        e.term.toLowerCase().includes(q) ||
+        (e.def || '').toLowerCase().includes(q)
+      );
+    });
+
+    editCount.textContent = query
+      ? `${filtered.length} of ${allEntries.length}`
+      : `${allEntries.length} ${allEntries.length === 1 ? 'entry' : 'entries'}`;
+
+    if (allEntries.length === 0) {
       entriesEditList.innerHTML = '<div class="empty">No entries yet.</div>';
+      return;
+    }
+    if (filtered.length === 0) {
+      entriesEditList.innerHTML = '<div class="empty">No matches.</div>';
       return;
     }
 
     entriesEditList.innerHTML = '';
-    entries.forEach((entry) => {
+    filtered.forEach((entry) => {
       const card = document.createElement('div');
       card.className = 'edit-card';
       card.innerHTML = `
@@ -98,6 +122,9 @@
             method: 'PUT',
             body: JSON.stringify({ term, pron: entry.pron, pos: entry.pos, def, example }),
           });
+          entry.term = term;
+          entry.def = def;
+          entry.example = example;
           hint.textContent = 'Saved.';
           setTimeout(() => (hint.textContent = ''), 1500);
         } catch (err) {
@@ -109,7 +136,8 @@
         if (!confirm(`Delete "${entry.term}"? This can't be undone.`)) return;
         try {
           await apiRequest(`/api/terms/${entry.id}`, { method: 'DELETE' });
-          card.remove();
+          allEntries = allEntries.filter((e) => e.id !== entry.id);
+          renderEntries();
         } catch (err) {
           hint.textContent = 'Error: ' + err.message;
         }
@@ -118,6 +146,11 @@
       entriesEditList.appendChild(card);
     });
   }
+
+  editSearch.addEventListener('input', (e) => {
+    query = e.target.value;
+    renderEntries();
+  });
 
   unlockBtn.addEventListener('click', () => {
     const code = accessCodeInput.value.trim();
@@ -146,6 +179,21 @@
     setStatus('');
   });
 
+  toggleAddBtn.addEventListener('click', () => {
+    const showing = newEntryCard.style.display !== 'none';
+    newEntryCard.style.display = showing ? 'none' : '';
+    toggleAddBtn.textContent = showing ? '+ Add a new word' : '\u2212 Hide add form';
+    if (!showing) document.getElementById('nTerm').focus();
+  });
+
+  cancelAddBtn.addEventListener('click', () => {
+    newEntryCard.style.display = 'none';
+    toggleAddBtn.textContent = '+ Add a new word';
+    document.getElementById('nTerm').value = '';
+    document.getElementById('nDef').value = '';
+    document.getElementById('nExample').value = '';
+  });
+
   addBtn.addEventListener('click', async () => {
     const term = document.getElementById('nTerm').value.trim();
     const def = document.getElementById('nDef').value.trim();
@@ -156,15 +204,18 @@
     }
     setStatus('Adding…');
     try {
-      await apiRequest('/api/terms', {
+      const created = await apiRequest('/api/terms', {
         method: 'POST',
         body: JSON.stringify({ term, def, example }),
       });
       document.getElementById('nTerm').value = '';
       document.getElementById('nDef').value = '';
       document.getElementById('nExample').value = '';
+      newEntryCard.style.display = 'none';
+      toggleAddBtn.textContent = '+ Add a new word';
       setStatus('Added.');
-      loadEntries();
+      allEntries.push(created);
+      renderEntries();
     } catch (err) {
       setStatus('Error: ' + err.message, true);
     }

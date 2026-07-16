@@ -46,10 +46,59 @@ button.danger{
 }
 button.danger:hover{border-color:#e58a8a; background:rgba(229,138,138,0.08);}
 
+.add-toggle-row{
+  margin-bottom:20px;
+}
+.add-toggle-row button{
+  width:100%;
+}
+
+.edit-search-wrap{
+  position:relative;
+  margin-bottom:20px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.edit-search-wrap input{
+  flex:1;
+  padding:12px 14px 12px 36px;
+  border:1.5px solid var(--border);
+  border-radius:2px;
+  background:var(--bg-panel);
+  font-family:var(--sans);
+  font-size:14px;
+  color:var(--text);
+  outline:none;
+}
+.edit-search-wrap input::placeholder{color:var(--text-faint);}
+.edit-search-wrap input:focus{border-color:var(--accent);}
+.edit-search-wrap::before{
+  content:"§";
+  position:absolute;
+  left:12px;
+  top:50%;
+  transform:translateY(-50%);
+  font-family:var(--serif);
+  font-size:15px;
+  color:var(--text-faint);
+  pointer-events:none;
+}
+.edit-count{
+  font-family:var(--mono);
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:0.05em;
+  color:var(--text-faint);
+  white-space:nowrap;
+}
+
 .new-entry-card{
-  border-top:1px solid var(--border);
-  padding-top:28px;
-  margin-top:12px;
+  border:1px solid var(--border);
+  background:var(--bg-panel);
+  border-radius:2px;
+  padding:24px;
+  margin-bottom:24px;
 }
 .new-entry-card h2{
   font-family:var(--serif);
