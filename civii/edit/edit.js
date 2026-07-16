@@ -14,6 +14,7 @@
   const addToggleRow = document.getElementById('addToggleRow');
   const editSearch = document.getElementById('editSearch');
   const editCount = document.getElementById('editCount');
+  const recentList = document.getElementById('recentList');
   const nPosPickerSlot = document.getElementById('nPosPicker');
 
   let accessCode = '';
@@ -36,21 +37,80 @@
   function createPosPicker(selected) {
     const wrap = document.createElement('div');
     wrap.className = 'pos-picker';
-    const initial = selected || 'noun';
-    wrap.dataset.value = initial;
-    const options = posOptions.includes(initial) ? posOptions : [initial, ...posOptions];
-    options.forEach((p) => {
+
+    const selectedList = (selected || 'noun')
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean);
+    if (selectedList.length === 0) selectedList.push('noun');
+
+    const allOptions = [...posOptions];
+    selectedList.forEach((s) => {
+      if (!allOptions.some((o) => o.toLowerCase() === s.toLowerCase())) allOptions.push(s);
+    });
+
+    const pillsRow = document.createElement('div');
+    pillsRow.className = 'pos-pills-row';
+    wrap.appendChild(pillsRow);
+
+    function updateValue() {
+      const active = Array.from(pillsRow.querySelectorAll('.pos-pill.active')).map((b) => b.textContent);
+      wrap.dataset.value = active.length ? active.join(', ') : 'noun';
+    }
+
+    function addPill(label, isActive) {
       const btn = document.createElement('button');
       btn.type = 'button';
-      btn.className = 'pos-pill' + (p === initial ? ' active' : '');
-      btn.textContent = p;
+      btn.className = 'pos-pill' + (isActive ? ' active' : '');
+      btn.textContent = label;
       btn.addEventListener('click', () => {
-        wrap.dataset.value = p;
-        wrap.querySelectorAll('.pos-pill').forEach((b) => b.classList.remove('active'));
-        btn.classList.add('active');
+        btn.classList.toggle('active');
+        updateValue();
       });
-      wrap.appendChild(btn);
+      pillsRow.appendChild(btn);
+    }
+
+    allOptions.forEach((opt) => addPill(opt, selectedList.some((s) => s.toLowerCase() === opt.toLowerCase())));
+
+    const customRow = document.createElement('div');
+    customRow.className = 'pos-custom-row';
+    const customInput = document.createElement('input');
+    customInput.type = 'text';
+    customInput.placeholder = 'Custom tag…';
+    customInput.maxLength = 30;
+    const customBtn = document.createElement('button');
+    customBtn.type = 'button';
+    customBtn.className = 'pos-custom-add';
+    customBtn.textContent = '+ Add';
+
+    function addCustomTag() {
+      const val = customInput.value.trim();
+      if (!val) return;
+      const existing = Array.from(pillsRow.querySelectorAll('.pos-pill')).find(
+        (b) => b.textContent.toLowerCase() === val.toLowerCase()
+      );
+      if (existing) {
+        existing.classList.add('active');
+      } else {
+        addPill(val, true);
+      }
+      customInput.value = '';
+      updateValue();
+    }
+
+    customBtn.addEventListener('click', addCustomTag);
+    customInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        addCustomTag();
+      }
     });
+
+    customRow.appendChild(customInput);
+    customRow.appendChild(customBtn);
+    wrap.appendChild(customRow);
+
+    updateValue();
     return wrap;
   }
 
@@ -85,6 +145,29 @@
     }
   }
 
+  function truncate(str, max) {
+    if (!str) return '';
+    return str.length > max ? str.slice(0, max).trim() + '…' : str;
+  }
+
+  function renderRecent() {
+    const recent = [...allEntries].sort((a, b) => (b.id || 0) - (a.id || 0)).slice(0, 5);
+    if (recent.length === 0) {
+      recentList.innerHTML = '<div class="recent-empty">No entries yet.</div>';
+      return;
+    }
+    recentList.innerHTML = recent
+      .map(
+        (e) => `
+        <div class="recent-item">
+          <div class="recent-term">${escapeHtml(e.term)}</div>
+          <div class="recent-def">${escapeHtml(truncate(e.def, 70))}</div>
+        </div>
+      `
+      )
+      .join('');
+  }
+
   function renderEntries() {
     const filtered = allEntries.filter((e) => {
       const q = query.toLowerCase();
@@ -99,16 +182,20 @@
 
     if (allEntries.length === 0) {
       entriesEditList.innerHTML = '<div class="empty">No entries yet.</div>';
+      renderRecent();
       return;
     }
     if (filtered.length === 0) {
       entriesEditList.innerHTML = '<div class="empty">No matches.</div>';
+      renderRecent();
       return;
     }
 
     filtered.forEach((entry) => {
       entriesEditList.appendChild(unlocked ? buildEditableCard(entry) : buildReadonlyCard(entry));
     });
+
+    renderRecent();
   }
 
   function buildReadonlyCard(entry) {
@@ -197,11 +284,11 @@
     return card;
   }
 
-  function resetPosPicker(picker) {
-    picker.dataset.value = 'noun';
-    picker.querySelectorAll('.pos-pill').forEach((b) => {
-      b.classList.toggle('active', b.textContent === 'noun');
-    });
+  function resetAddPosPicker() {
+    const fresh = createPosPicker('noun');
+    fresh.id = 'nPosPicker';
+    addPosPicker.replaceWith(fresh);
+    addPosPicker = fresh;
   }
 
   editSearch.addEventListener('input', (e) => {
@@ -255,7 +342,7 @@
     document.getElementById('nTerm').value = '';
     document.getElementById('nDef').value = '';
     document.getElementById('nExample').value = '';
-    resetPosPicker(addPosPicker);
+    resetAddPosPicker();
   });
 
   addBtn.addEventListener('click', async () => {
@@ -276,7 +363,7 @@
       document.getElementById('nTerm').value = '';
       document.getElementById('nDef').value = '';
       document.getElementById('nExample').value = '';
-      resetPosPicker(addPosPicker);
+      resetAddPosPicker();
       newEntryCard.style.display = 'none';
       toggleAddBtn.textContent = '+ Add a new word';
       setStatus('Added.');
@@ -296,7 +383,7 @@
   });
 
   // pos picker for the "add new word" form is built once, up front
-  const addPosPicker = createPosPicker('noun');
+  let addPosPicker = createPosPicker('noun');
   addPosPicker.id = 'nPosPicker';
   nPosPickerSlot.replaceWith(addPosPicker);
 
