@@ -37,7 +37,9 @@ export async function onRequestPut(context) {
 
   try {
     await env.DB
-      .prepare('UPDATE terms SET term=?, pron=?, pos=?, def=?, example=? WHERE id=?')
+      .prepare(
+        'UPDATE terms SET term=?, pron=?, pos=?, def=?, example=?, updated_at=CURRENT_TIMESTAMP WHERE id=?'
+      )
       .bind(term, pron, pos, def, example, params.id)
       .run();
     return json({ success: true });

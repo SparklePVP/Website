@@ -4,7 +4,8 @@ CREATE TABLE IF NOT EXISTS terms (
   pron TEXT,
   pos TEXT DEFAULT 'noun',
   def TEXT NOT NULL,
-  example TEXT
+  example TEXT,
+  updated_at TEXT DEFAULT (CURRENT_TIMESTAMP)
 );
 
 INSERT INTO terms (term, pron, pos, def, example) VALUES

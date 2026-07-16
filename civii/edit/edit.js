@@ -151,7 +151,9 @@
   }
 
   function renderRecent() {
-    const recent = [...allEntries].sort((a, b) => (b.id || 0) - (a.id || 0)).slice(0, 5);
+    const recent = [...allEntries]
+      .sort((a, b) => new Date(b.updated_at || 0) - new Date(a.updated_at || 0))
+      .slice(0, 5);
     if (recent.length === 0) {
       recentList.innerHTML = '<div class="recent-empty">No entries yet.</div>';
       return;
@@ -263,6 +265,8 @@
         entry.def = def;
         entry.example = example;
         entry.pos = pos;
+        entry.updated_at = new Date().toISOString();
+        renderRecent();
         hint.textContent = 'Saved.';
         setTimeout(() => (hint.textContent = ''), 1500);
       } catch (err) {

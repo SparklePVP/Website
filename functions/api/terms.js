@@ -46,10 +46,15 @@ export async function onRequestPost(context) {
 
   try {
     const result = await env.DB
-      .prepare('INSERT INTO terms (term, pron, pos, def, example) VALUES (?, ?, ?, ?, ?)')
+      .prepare(
+        "INSERT INTO terms (term, pron, pos, def, example, updated_at) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)"
+      )
       .bind(term, pron, pos, def, example)
       .run();
-    return json({ id: result.meta.last_row_id, term, pron, pos, def, example }, 201);
+    return json(
+      { id: result.meta.last_row_id, term, pron, pos, def, example, updated_at: new Date().toISOString() },
+      201
+    );
   } catch (err) {
     return json({ error: err.message }, 500);
   }
