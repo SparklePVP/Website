@@ -289,6 +289,7 @@ button.danger:hover{border-color:#e58a8a; background:rgba(229,138,138,0.08);}
   line-height:1.6;
   margin:0 0 8px;
   color:var(--text);
+  white-space:pre-wrap;
 }
 .readonly-entry .entry-example{
   border-left:2px solid var(--accent);
@@ -299,6 +300,7 @@ button.danger:hover{border-color:#e58a8a; background:rgba(229,138,138,0.08);}
   line-height:1.6;
   color:var(--text-dim);
   margin:0;
+  white-space:pre-wrap;
 }
 
 .gen-shell{
