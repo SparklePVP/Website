@@ -5,4 +5,4 @@ pages_build_output_dir = "."
 [[d1_databases]]
 binding = "DB"
 database_name = "civii-dictionary"
-database_id = "REPLACE_WITH_YOUR_DATABASE_ID"
+database_id = "d56bca55-cb3f-4e39-846c-3beaeb8ae196"
