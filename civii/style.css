@@ -236,6 +236,7 @@ main{
   line-height:1.65;
   margin:0 0 10px;
   color:var(--text);
+  white-space:pre-wrap;
 }
 .entry-example{
   border-left:2px solid var(--accent);
@@ -246,6 +247,7 @@ main{
   line-height:1.6;
   color:var(--text-dim);
   margin:0 0 12px;
+  white-space:pre-wrap;
 }
 .empty{
   text-align:center;
