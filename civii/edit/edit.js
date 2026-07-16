@@ -29,6 +29,10 @@
     return div.innerHTML;
   }
 
+  function fakePron(word) {
+    return '/' + word.toLowerCase().replace(/[^a-z]/g, '-').replace(/-+/g, '-') + '/';
+  }
+
   function setStatus(msg, isError) {
     editStatus.textContent = msg || 'Editing unlocked';
     editStatus.style.color = isError ? '#e58a8a' : '';
@@ -206,7 +210,7 @@
     el.innerHTML = `
       <div class="entry-head">
         <span class="entry-term">${escapeHtml(entry.term)}</span>
-        <span class="entry-pron">${escapeHtml(entry.pron || '')}</span>
+        <span class="entry-pron">${escapeHtml(entry.pron || fakePron(entry.term))}</span>
         <span class="entry-pos">${escapeHtml(entry.pos || 'noun')}</span>
       </div>
       <p class="entry-def">${escapeHtml(entry.def)}</p>
