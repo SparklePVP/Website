@@ -1,0 +1,33 @@
+/* Reset default margins and padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Center the content perfectly on the screen */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #121212; /* Sleek dark background */
+    font-family: 'Arial Black', -apple-system, BlinkMacSystemFont, sans-serif;
+    overflow: hidden;
+}
+
+/* Style the text */
+#main-heading {
+    color: #ffffff;
+    font-size: 5rem; /* Large, bold text */
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    user-select: none;
+    transition: transform 0.3s ease;
+}
+
+/* Subtle hover effect */
+#main-heading:hover {
+    transform: scale(1.1);
+    color: #00ffcc; /* Tech-green accent on hover */
+}

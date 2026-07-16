@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Civii Dictionary — Editor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="edit.css">
+</head>
+<body>
+
+<div class="guidebar">
+  <span>Civii Dictionary</span>
+  <span class="mid">Editor</span>
+  <span>&nbsp;</span>
+</div>
+
+<div class="gen-shell">
+  <a class="back-link" href="../index.html">&larr; Back to dictionary</a>
+  <div class="eyebrow">Live editor</div>
+  <h1>Edit the dictionary</h1>
+  <p class="tagline">Changes here go straight to the live site — no file uploads needed.</p>
+
+  <div id="lockScreen">
+    <div class="field">
+      <label for="accessCode">Access code</label>
+      <input type="password" id="accessCode" placeholder="Enter the access code" autocomplete="off">
+    </div>
+    <div class="gen-actions">
+      <button type="button" class="primary" id="unlockBtn">Unlock editing</button>
+    </div>
+    <p id="unlockError" class="edit-error" style="display:none;"></p>
+  </div>
+
+  <div id="editScreen" style="display:none;">
+    <div class="edit-toolbar">
+      <span id="editStatus" class="edit-status"></span>
+      <button type="button" class="ghost" id="lockBtn">Lock</button>
+    </div>
+
+    <div id="entriesEditList"></div>
+
+    <div class="new-entry-card">
+      <h2>Add a new word</h2>
+      <div class="field">
+        <label for="nTerm">Term</label>
+        <input type="text" id="nTerm" maxlength="60" placeholder="e.g. Blorpening">
+      </div>
+      <div class="field">
+        <label for="nDef">Definition</label>
+        <textarea id="nDef" maxlength="400" placeholder="What does it mean?"></textarea>
+      </div>
+      <div class="field">
+        <label for="nExample">Example (optional)</label>
+        <textarea id="nExample" maxlength="300" placeholder="Used in a sentence…"></textarea>
+      </div>
+      <div class="gen-actions">
+        <button type="button" class="primary" id="addBtn">Add word</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="edit.js"></script>
+</body>
+</html>

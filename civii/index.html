@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Civii Dictionary</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="guidebar">
+  <span id="guideFirst">—</span>
+  <span class="mid">Civii Dictionary</span>
+  <span id="guideLast">—</span>
+</div>
+
+<header>
+  <div class="eyebrow">Est. this year · Living document</div>
+  <h1>Civii Dictionary</h1>
+  <div class="pronunciation">/ˈsɪv.i.i ˈdɪk.ʃə.ner.i/ · noun</div>
+  <p class="tagline">The official record of things that are only funny to us. Every word here was earned.</p>
+  <div class="stat-row">
+    <span id="statCount">0 entries</span>
+  </div>
+</header>
+
+<div class="howto">
+  <details>
+    <summary>How to add a word</summary>
+    <p>Entries live in a database now. Head to the <a href="edit/">editor</a> to add, edit, or remove words directly — no file uploads needed.</p>
+  </details>
+</div>
+
+<div class="controls">
+  <div class="search-wrap">
+    <input type="text" id="searchInput" placeholder="Look up a word…" autocomplete="off">
+  </div>
+</div>
+
+<main id="entriesList">
+  <div class="load-state">Loading entries…</div>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
