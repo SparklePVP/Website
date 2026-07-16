@@ -21,68 +21,55 @@
   <a class="back-link" href="../index.html">&larr; Back to dictionary</a>
   <div class="eyebrow">Live editor</div>
   <h1>Edit the dictionary</h1>
-  <p class="tagline">Those who know.</p>
+  <p class="tagline">Enter the access code to add, edit, or delete entries.</p>
 
-  <div id="lockScreen">
-    <div class="field">
-      <label for="accessCode">Access code</label>
-      <input type="password" id="accessCode" placeholder="Enter the access code" autocomplete="off">
-    </div>
-    <div class="gen-actions">
+  <div class="edit-topbar">
+    <div class="access-inline" id="accessInline">
+      <input type="password" id="accessCode" placeholder="Access code to edit" autocomplete="off">
       <button type="button" class="primary" id="unlockBtn">Unlock editing</button>
     </div>
-    <p id="unlockError" class="edit-error" style="display:none;"></p>
-  </div>
-
-  <div id="editScreen" style="display:none;">
-    <div class="edit-toolbar">
-      <span id="editStatus" class="edit-status"></span>
+    <div class="access-inline" id="unlockedInline" style="display:none;">
+      <span class="edit-status" id="editStatus">Editing unlocked</span>
       <button type="button" class="ghost" id="lockBtn">Lock</button>
     </div>
+  </div>
+  <p id="unlockError" class="edit-error" style="display:none;"></p>
 
-    <div class="add-toggle-row">
-      <button type="button" class="primary" id="toggleAddBtn">+ Add a new word</button>
+  <div class="add-toggle-row" id="addToggleRow" style="display:none;">
+    <button type="button" class="primary" id="toggleAddBtn">+ Add a new word</button>
+  </div>
+
+  <div class="new-entry-card" id="newEntryCard" style="display:none;">
+    <h2>Add a new word</h2>
+    <div class="field">
+      <label for="nTerm">Term</label>
+      <input type="text" id="nTerm" maxlength="60" placeholder="e.g. Blorpening">
     </div>
-
-    <div class="new-entry-card" id="newEntryCard" style="display:none;">
-      <h2>Add a new word</h2>
-      <div class="field">
-        <label for="nTerm">Term</label>
-        <input type="text" id="nTerm" maxlength="60" placeholder="e.g. Blorpening">
-      </div>
-      <div class="field">
-        <label for="nDef">Definition</label>
-        <textarea id="nDef" maxlength="400" placeholder="What does it mean?"></textarea>
-      </div>
-      <div class="field">
-        <label for="nPos">Part of speech</label>
-        <select id="nPos">
-          <option value="noun">noun</option>
-          <option value="proper noun">proper noun</option>
-          <option value="verb">verb</option>
-          <option value="phrase">phrase</option>
-          <option value="idiom">idiom</option>
-          <option value="abbreviation">abbreviation</option>
-          <option value="adjective">adjective</option>
-          <option value="interjection">interjection</option>
-        </select>
-      </div>
-      <div class="field">
-        <label for="nExample">Example (optional)</label>
-        <textarea id="nExample" maxlength="300" placeholder="Used in a sentence…"></textarea>
-      </div>
-      <div class="gen-actions">
-        <button type="button" class="ghost" id="cancelAddBtn">Cancel</button>
-        <button type="button" class="primary" id="addBtn">Add word</button>
-      </div>
+    <div class="field">
+      <label for="nDef">Definition</label>
+      <textarea id="nDef" maxlength="400" placeholder="What does it mean?"></textarea>
     </div>
-
-    <div class="edit-search-wrap">
-      <input type="text" id="editSearch" placeholder="Search entries to edit…" autocomplete="off">
-      <span class="edit-count" id="editCount"></span>
+    <div class="field">
+      <label>Part of speech</label>
+      <div class="pos-picker" id="nPosPicker"></div>
     </div>
+    <div class="field">
+      <label for="nExample">Example (optional)</label>
+      <textarea id="nExample" maxlength="300" placeholder="Used in a sentence…"></textarea>
+    </div>
+    <div class="gen-actions">
+      <button type="button" class="ghost" id="cancelAddBtn">Cancel</button>
+      <button type="button" class="primary" id="addBtn">Add word</button>
+    </div>
+  </div>
 
-    <div id="entriesEditList"></div>
+  <div class="edit-search-wrap">
+    <input type="text" id="editSearch" placeholder="Search entries…" autocomplete="off">
+    <span class="edit-count" id="editCount"></span>
+  </div>
+
+  <div id="entriesEditList">
+    <div class="load-state">Loading entries…</div>
   </div>
 </div>
 
