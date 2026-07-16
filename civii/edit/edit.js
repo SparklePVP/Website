@@ -17,6 +17,7 @@
   let accessCode = '';
   let allEntries = [];
   let query = '';
+  const posOptions = ['noun', 'proper noun', 'verb', 'phrase', 'idiom', 'abbreviation', 'adjective', 'interjection'];
 
   function escapeHtml(str) {
     const div = document.createElement('div');
@@ -96,6 +97,12 @@
           <textarea class="f-def" maxlength="400">${escapeHtml(entry.def)}</textarea>
         </div>
         <div class="field">
+          <label>Part of speech</label>
+          <select class="f-pos">
+            ${(posOptions.includes(entry.pos) ? posOptions : [entry.pos, ...posOptions]).map(p => `<option value="${escapeHtml(p)}" ${entry.pos === p ? 'selected' : ''}>${escapeHtml(p)}</option>`).join('')}
+          </select>
+        </div>
+        <div class="field">
           <label>Example (optional)</label>
           <textarea class="f-example" maxlength="300">${escapeHtml(entry.example)}</textarea>
         </div>
@@ -112,6 +119,7 @@
         const term = card.querySelector('.f-term').value.trim();
         const def = card.querySelector('.f-def').value.trim();
         const example = card.querySelector('.f-example').value.trim();
+        const pos = card.querySelector('.f-pos').value;
         if (!term || !def) {
           hint.textContent = 'Term and definition are required.';
           return;
@@ -120,11 +128,12 @@
         try {
           await apiRequest(`/api/terms/${entry.id}`, {
             method: 'PUT',
-            body: JSON.stringify({ term, pron: entry.pron, pos: entry.pos, def, example }),
+            body: JSON.stringify({ term, pron: entry.pron, pos, def, example }),
           });
           entry.term = term;
           entry.def = def;
           entry.example = example;
+          entry.pos = pos;
           hint.textContent = 'Saved.';
           setTimeout(() => (hint.textContent = ''), 1500);
         } catch (err) {
@@ -192,12 +201,14 @@
     document.getElementById('nTerm').value = '';
     document.getElementById('nDef').value = '';
     document.getElementById('nExample').value = '';
+    document.getElementById('nPos').value = 'noun';
   });
 
   addBtn.addEventListener('click', async () => {
     const term = document.getElementById('nTerm').value.trim();
     const def = document.getElementById('nDef').value.trim();
     const example = document.getElementById('nExample').value.trim();
+    const pos = document.getElementById('nPos').value;
     if (!term || !def) {
       setStatus('Term and definition are required.', true);
       return;
@@ -206,11 +217,12 @@
     try {
       const created = await apiRequest('/api/terms', {
         method: 'POST',
-        body: JSON.stringify({ term, def, example }),
+        body: JSON.stringify({ term, def, example, pos }),
       });
       document.getElementById('nTerm').value = '';
       document.getElementById('nDef').value = '';
       document.getElementById('nExample').value = '';
+      document.getElementById('nPos').value = 'noun';
       newEntryCard.style.display = 'none';
       toggleAddBtn.textContent = '+ Add a new word';
       setStatus('Added.');
@@ -219,5 +231,13 @@
     } catch (err) {
       setStatus('Error: ' + err.message, true);
     }
+  });
+
+  const backToTopBtn = document.getElementById('backToTopBtn');
+  window.addEventListener('scroll', () => {
+    backToTopBtn.classList.toggle('visible', window.scrollY > 400);
+  });
+  backToTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 })();

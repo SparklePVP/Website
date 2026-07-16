@@ -21,7 +21,7 @@
   <a class="back-link" href="../index.html">&larr; Back to dictionary</a>
   <div class="eyebrow">Live editor</div>
   <h1>Edit the dictionary</h1>
-  <p class="tagline">Those Who Know.</p>
+  <p class="tagline">Those who know.</p>
 
   <div id="lockScreen">
     <div class="field">
@@ -55,6 +55,19 @@
         <textarea id="nDef" maxlength="400" placeholder="What does it mean?"></textarea>
       </div>
       <div class="field">
+        <label for="nPos">Part of speech</label>
+        <select id="nPos">
+          <option value="noun">noun</option>
+          <option value="proper noun">proper noun</option>
+          <option value="verb">verb</option>
+          <option value="phrase">phrase</option>
+          <option value="idiom">idiom</option>
+          <option value="abbreviation">abbreviation</option>
+          <option value="adjective">adjective</option>
+          <option value="interjection">interjection</option>
+        </select>
+      </div>
+      <div class="field">
         <label for="nExample">Example (optional)</label>
         <textarea id="nExample" maxlength="300" placeholder="Used in a sentence…"></textarea>
       </div>
@@ -72,6 +85,8 @@
     <div id="entriesEditList"></div>
   </div>
 </div>
+
+<button type="button" id="backToTopBtn" class="back-to-top" title="Back to top" aria-label="Back to top">&uarr;</button>
 
 <script src="edit.js"></script>
 </body>
